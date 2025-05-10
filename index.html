@@ -1,202 +1,189 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Fourlinkx Photo Ai</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #1a1a2e;
-      color: #e0e0f8;
-      max-width: 350px;
-      margin: 0 auto;
-      padding: 20px 15px;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      overflow: hidden;
-      user-select: none;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Fourlinkx Photo Ai</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: #e3eafc;
+    max-width: 350px;
+    height: 600px;
+    margin: 0 auto;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    overflow: hidden;
+  }
+  h1 {
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    font-size: 2rem;
+    text-align: center;
+    color: #63b3ed;
+    text-shadow: 0 0 6px #2c7be5cc;
+  }
+  p.description {
+    margin: 0 0 20px 0;
+    font-weight: 300;
+    font-size: 1rem;
+    text-align: center;
+    color: #9bb7e6dd;
+  }
+  label.upload-label {
+    border: 2px dashed #58a6ffcc;
+    border-radius: 16px;
+    padding: 30px 12px;
+    text-align: center;
+    color: #65a3ffcc;
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s, background-color 0.15s;
+    user-select: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  label.upload-label:hover,
+  label.upload-label:focus-visible {
+    border-color: #8dbdff;
+    color: #8dbdff;
+    background-color: rgba(55, 95, 188, 0.3);
+    outline: none;
+  }
+  input#file-input {
+    display: none;
+  }
+  .preview-container {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  figure {
+    margin: 0;
+    width: 48%;
+    background-color: rgba(30, 50, 100, 0.7);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 3px 10px rgba(30, 95, 255, 0.5);
+  }
+  figure img,
+  figure canvas {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 0 14px rgba(40, 110, 255, 0.6);
+    display: block;
+    margin: 0 auto;
+  }
+  figcaption {
+    margin-top: 10px;
+    color: #7ea9ffcc;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    user-select: none;
+  }
+  button#generate-btn {
+    margin-top: auto;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 14px 0;
+    border-radius: 16px;
+    border: none;
+    background-color: #3e7ff8;
+    color: #d6e2ff;
+    cursor: pointer;
+    box-shadow: 0 7px 20px rgba(63, 123, 245, 0.6);
+    transition: background-color 0.25s;
+    user-select: none;
+  }
+  button#generate-btn:disabled {
+    background-color: #2a4d8c88;
+    cursor: not-allowed;
+    box-shadow: none;
+    color: #94a9ccaa;
+  }
+  button#generate-btn:hover:not(:disabled) {
+    background-color: #2d6bdb;
+    box-shadow: 0 9px 25px rgba(47, 105, 230, 0.9);
+  }
+  p#instruction {
+    margin-top: 15px;
+    font-weight: 300;
+    font-size: 0.85rem;
+    color: #aac3ffbb;
+    text-align: center;
+    user-select: none;
+  }
+  /* Scrollbar for preview container */
+  .preview-container::-webkit-scrollbar {
+    height: 6px;
+  }
+  .preview-container::-webkit-scrollbar-thumb {
+    background-color: #7ea9ffbb;
+    border-radius: 4px;
+  }
+  /* Mobile adjustments */
+  @media (max-width: 350px) {
     h1 {
-      font-weight: 600;
-      font-size: 2rem;
-      margin-bottom: 8px;
-      text-align: center;
-      color: #6ee7ff;
-      text-shadow: 0 0 6px #24aaffcc;
+      font-size: 1.7rem;
     }
-    p {
-      font-weight: 300;
-      margin-top: 0;
-      margin-bottom: 20px;
-      text-align: center;
-      font-size: 1rem;
-      color: #a5b9dccc;
-    }
-
-    /* Upload input */
-    .upload-container {
-      border: 2px dashed #479be0cc;
-      border-radius: 15px;
-      padding: 30px 10px;
-      text-align: center;
-      cursor: pointer;
-      color: #479be0cc;
-      box-shadow: 0 0 10px #2a7bd9aa;
-      transition: border-color 0.3s ease, color 0.3s ease;
-    }
-    .upload-container:hover {
-      border-color: #6ee7ff;
-      color: #6ee7ff;
-      box-shadow: 0 0 16px #30c3ffcc;
-    }
-    #fileInput {
-      display: none;
-    }
-
-    /* Image previews */
-    .images-container {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: 10px;
+    button#generate-btn {
+      font-size: 1.1rem;
+      padding: 12px 0;
     }
     figure {
-      flex: 0 0 45%;
-      margin: 0;
-      text-align: center;
-      background: #16213e;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px #1f3a7aaa;
-      padding: 10px;
+      width: 49%;
     }
-    figure img, canvas {
-      max-width: 100%;
-      border-radius: 10px;
-      display: block;
-      margin: 0 auto 8px auto;
-      box-shadow: 0 4px 8px #0f255ea8;
-      user-select: none;
-    }
-    figcaption {
-      font-weight: 500;
-      font-size: 0.9rem;
-      color: #7fcfffcc;
-    }
+  }
 
-    /* Buttons */
-    button {
-      margin-top: 10px;
-      display: block;
-      width: 100%;
-      font-weight: 600;
-      padding: 12px 0;
-      background: #48b1ff;
-      color: #091f3f;
-      border: none;
-      border-radius: 16px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 5px 15px #2887c5cc;
-      transition: background-color 0.25s ease;
-      user-select: none;
-    }
-    button:hover:not(:disabled) {
-      background-color: #2a90f1;
-      box-shadow: 0 6px 20px #1f6bc399;
-    }
-    button:disabled {
-      cursor: not-allowed;
-      background-color: #2e587e99;
-      box-shadow: none;
-      color: #a1bbd9cc;
-    }
-
-    /* Instructions */
-    .instructions {
-      font-size: 0.85rem;
-      font-weight: 300;
-      color: #9db8e0cc;
-      text-align: center;
-      margin-top: 10px;
-      user-select: none;
-    }
-
-    /* Scrollbar for images container */
-    .images-container::-webkit-scrollbar {
-      height: 6px;
-    }
-    .images-container::-webkit-scrollbar-thumb {
-      background-color: #6ee7ffcc;
-      border-radius: 4px;
-    }
-
-    /* Responsive for small width */
-    @media (max-width: 350px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-      button {
-        font-size: 1rem;
-        padding: 10px 0;
-      }
-      .images-container {
-        gap: 8px;
-      }
-      figure {
-        flex-basis: 48%;
-      }
-    }
-  </style>
+</style>
 </head>
 <body>
-
   <h1>Fourlinkx Photo Ai</h1>
-  <p>Upload your photo and see an AI-styled artistic transformation applied instantly!</p>
+  <p class="description">Upload a photo and watch your AI-stylized pixel-art transformation right here!</p>
 
-  <label class="upload-container" for="fileInput" tabindex="0" aria-label="Upload your photo">
-    Click or tap here to upload your photo
-    <input type="file" id="fileInput" accept="image/*" />
+  <label class="upload-label" for="file-input" tabindex="0" aria-label="Upload your photo or image">
+    Click or tap here to upload photo
+    <input type="file" id="file-input" accept="image/*" />
   </label>
 
-  <div class="images-container" aria-live="polite" aria-relevant="additions removals">
-    <figure id="originalFigure" hidden>
-      <img id="originalImage" alt="Original uploaded photo preview" />
+  <div class="preview-container" aria-live="polite" aria-relevant="additions removals" aria-atomic="true">
+    <figure id="original-figure" hidden>
+      <img id="original-img" alt="Original uploaded photo preview" />
       <figcaption>Original Photo</figcaption>
     </figure>
-    <figure id="aiFigure" hidden>
-      <canvas id="aiCanvas" aria-label="AI generated image"></canvas>
+    <figure id="ai-figure" hidden>
+      <canvas id="ai-canvas" aria-label="AI generated image"></canvas>
       <figcaption>AI-Generated Image</figcaption>
     </figure>
   </div>
 
-  <button id="generateBtn" disabled aria-disabled="true">Generate AI Image</button>
+  <button id="generate-btn" disabled aria-disabled="true" type="button">Generate AI Image</button>
 
-  <p class="instructions">
-    The AI-generated image is simulated in your browser by applying artistic filters. No photo data is uploaded anywhere.
-  </p>
+  <p id="instruction">All processing happens in your browser; your images are private and secure.</p>
 
 <script>
-  (function() {
-    const fileInput = document.getElementById('fileInput');
-    const originalImage = document.getElementById('originalImage');
-    const aiCanvas = document.getElementById('aiCanvas');
-    const originalFigure = document.getElementById('originalFigure');
-    const aiFigure = document.getElementById('aiFigure');
-    const generateBtn = document.getElementById('generateBtn');
+  (() => {
+    const fileInput = document.getElementById('file-input');
+    const generateBtn = document.getElementById('generate-btn');
+    const originalFigure = document.getElementById('original-figure');
+    const originalImg = document.getElementById('original-img');
+    const aiFigure = document.getElementById('ai-figure');
+    const aiCanvas = document.getElementById('ai-canvas');
+    const aiCtx = aiCanvas.getContext('2d');
 
-    let img = new Image();
-    let imgLoaded = false;
+    let userImg = null;
 
     function reset() {
       originalFigure.hidden = true;
@@ -205,174 +192,135 @@
       generateBtn.setAttribute('aria-disabled', 'true');
       aiCanvas.width = 0;
       aiCanvas.height = 0;
-      originalImage.src = '';
-      imgLoaded = false;
+      originalImg.src = "";
+      userImg = null;
     }
 
     function loadImage(file) {
       reset();
       if (!file) return;
-
       const url = URL.createObjectURL(file);
-      img.src = url;
-
-      img.onload = function() {
+      const img = new Image();
+      img.onload = () => {
         URL.revokeObjectURL(url);
-        originalImage.src = img.src;
+        userImg = img;
+        originalImg.src = url;
         originalFigure.hidden = false;
         generateBtn.disabled = false;
         generateBtn.setAttribute('aria-disabled', 'false');
-        imgLoaded = true;
       };
       img.onerror = () => {
-        alert("Failed to load image! Please try another file.");
+        alert("Failed to load image. Please try a different one.");
         reset();
       }
+      img.src = url;
     }
 
-    // Function to apply pixelated cartoon effect
-    function applyPixelatedCartoonEffect() {
-      if (!imgLoaded) return;
+    function pixelateAndCartoon() {
+      if (!userImg) return;
+      const maxWidth = 340;
+      const scale = Math.min(1, maxWidth / userImg.width);
+      const width = Math.floor(userImg.width * scale);
+      const height = Math.floor(userImg.height * scale);
 
-      // Set max display width, slightly larger for generated canvas
-      const maxCanvasWidth = 340;
-      const scale = Math.min(1, maxCanvasWidth / img.width);
-      const displayWidth = Math.floor(img.width * scale);
-      const displayHeight = Math.floor(img.height * scale);
+      // Draw scaled down image on offscreen canvas
+      const offCanvas = document.createElement('canvas');
+      const offCtx = offCanvas.getContext('2d');
+      offCanvas.width = width;
+      offCanvas.height = height;
+      offCtx.drawImage(userImg, 0, 0, width, height);
 
-      // First, draw original image scaled to display size on offscreen canvas
-      const offscreen = document.createElement('canvas');
-      const offCtx = offscreen.getContext('2d');
-      offscreen.width = displayWidth;
-      offscreen.height = displayHeight;
-      offCtx.drawImage(img, 0, 0, displayWidth, displayHeight);
+      // Pixelation block size
+      const blockSize = 10;
 
-      // Pixelation level (size of pixel blocks)
-      const pixelSize = 12; // bigger pixel blocks for more noticeable pixelation
+      // Calculate low res dimensions for pixelation
+      const pixelWidth = Math.ceil(width / blockSize);
+      const pixelHeight = Math.ceil(height / blockSize);
 
-      // Calculate size of pixelated canvas
-      const pixelCanvasWidth = Math.ceil(displayWidth / pixelSize);
-      const pixelCanvasHeight = Math.ceil(displayHeight / pixelSize);
-
-      // Create pixelated canvas to draw scaled down image
+      // Create pixel canvas
       const pixelCanvas = document.createElement('canvas');
       const pixelCtx = pixelCanvas.getContext('2d');
-      pixelCanvas.width = pixelCanvasWidth;
-      pixelCanvas.height = pixelCanvasHeight;
+      pixelCanvas.width = pixelWidth;
+      pixelCanvas.height = pixelHeight;
 
-      // Draw scaled-down small pixelated image
-      pixelCtx.drawImage(offscreen, 0, 0, displayWidth, displayHeight, 0, 0, pixelCanvasWidth, pixelCanvasHeight);
+      // Draw scaled-down image to create pixelation effect
+      pixelCtx.drawImage(offCanvas, 0, 0, width, height, 0, 0, pixelWidth, pixelHeight);
 
-      // Get pixel data for cartoon effect
-      const pixelImageData = pixelCtx.getImageData(0, 0, pixelCanvasWidth, pixelCanvasHeight);
-      const data = pixelImageData.data;
+      // Strong color quantization for cartoon look
+      const imageData = pixelCtx.getImageData(0, 0, pixelWidth, pixelHeight);
+      const data = imageData.data;
+      const quantLevel = 64;
 
-      // Stronger color quantization (reduce colors)
-      const quantizeLevel = 64; // fewer colors, more cartoonish
-      for(let i = 0; i < data.length; i += 4) {
-        data[i] = Math.floor(data[i] / quantizeLevel) * quantizeLevel;     // R
-        data[i+1] = Math.floor(data[i+1] / quantizeLevel) * quantizeLevel; // G
-        data[i+2] = Math.floor(data[i+2] / quantizeLevel) * quantizeLevel; // B
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = Math.floor(data[i] / quantLevel) * quantLevel;
+        data[i+1] = Math.floor(data[i+1] / quantLevel) * quantLevel;
+        data[i+2] = Math.floor(data[i+2] / quantLevel) * quantLevel;
       }
+      pixelCtx.putImageData(imageData, 0, 0);
 
-      pixelCtx.putImageData(pixelImageData, 0, 0);
+      // Resize canvas to full display with no smoothing (sharp pixel blocks)
+      aiCanvas.width = width;
+      aiCanvas.height = height;
+      aiCtx.imageSmoothingEnabled = false;
+      aiCtx.clearRect(0, 0, width, height);
+      aiCtx.drawImage(pixelCanvas, 0, 0, pixelWidth, pixelHeight, 0, 0, width, height);
 
-      // Now draw pixelated image enlarged back onto aiCanvas
-      aiCanvas.width = displayWidth;
-      aiCanvas.height = displayHeight;
+      // Add subtle bluish overlay for style
+      aiCtx.fillStyle = 'rgba(60, 120, 255, 0.12)';
+      aiCtx.fillRect(0, 0, width, height);
 
-      // Disable smoothing for crisp pixel blocks
-      const ctx = aiCanvas.getContext('2d');
-      ctx.imageSmoothingEnabled = false;
+      // Edge detection for cartoon outlines
+      const imgData = aiCtx.getImageData(0, 0, width, height);
+      const pix = imgData.data;
 
-      ctx.clearRect(0, 0, aiCanvas.width, aiCanvas.height);
-      ctx.drawImage(pixelCanvas, 0, 0, pixelCanvasWidth, pixelCanvasHeight, 0, 0, displayWidth, displayHeight);
-
-      // Optionally overlay a subtle translucent blue tint for style
-      ctx.fillStyle = 'rgba(70, 160, 255, 0.15)';
-      ctx.fillRect(0, 0, aiCanvas.width, aiCanvas.height);
-
-      // Optional: add cartoonish black outlines (simple edge detection)
-      const edgeThreshold = 30;
-      const imgData = ctx.getImageData(0, 0, aiCanvas.width, aiCanvas.height);
-      const pixels = imgData.data;
-
-      function rgbToGray(r, g, b) {
+      function grayscale(r, g, b) {
         return 0.299 * r + 0.587 * g + 0.114 * b;
       }
 
-      for (let y = 1; y < aiCanvas.height - 1; y++) {
-        for (let x = 1; x < aiCanvas.width - 1; x++) {
-          const idx = (y * aiCanvas.width + x) * 4;
-          const center = rgbToGray(pixels[idx], pixels[idx + 1], pixels[idx + 2]);
-          const right = rgbToGray(pixels[idx + 4], pixels[idx + 5], pixels[idx + 6]);
-          const down = rgbToGray(pixels[idx + aiCanvas.width * 4], pixels[idx + aiCanvas.width * 4 +1], pixels[idx + aiCanvas.width *4 +2]);
-
-          const diff = Math.abs(center - right) + Math.abs(center - down);
-          if(diff > edgeThreshold) {
-            pixels[idx] = 20;   // black outlines strong darkening
-            pixels[idx+1] = 20;
-            pixels[idx+2] = 20;
-            // Optional alpha enhancement for edges
-            pixels[idx+3] = 255;
+      const threshold = 30;
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const idx = (y * width + x) * 4;
+          const center = grayscale(pix[idx], pix[idx+1], pix[idx+2]);
+          const right = grayscale(pix[idx+4], pix[idx+5], pix[idx+6]);
+          const down = grayscale(pix[idx + width*4], pix[idx + width*4 +1], pix[idx + width*4 +2]);
+          if (Math.abs(center - right) + Math.abs(center - down) > threshold) {
+            pix[idx] = 20;
+            pix[idx + 1] = 20;
+            pix[idx + 2] = 20;
+            pix[idx + 3] = 255;
           }
         }
       }
-
-      ctx.putImageData(imgData, 0, 0);
+      aiCtx.putImageData(imgData, 0, 0);
 
       aiFigure.hidden = false;
     }
 
     fileInput.addEventListener('change', e => {
       if (e.target.files.length > 0) {
-        reset();
-        const file = e.target.files[0];
-        const url = URL.createObjectURL(file);
-        img.src = url;
-        img.onload = function() {
-          URL.revokeObjectURL(url);
-          originalImage.src = img.src;
-          originalFigure.hidden = false;
-          generateBtn.disabled = false;
-          generateBtn.setAttribute('aria-disabled', 'false');
-          imgLoaded = true;
-        };
-        img.onerror = () => {
-          alert("Failed to load image! Please try another file.");
-          reset();
-        }
+        loadImage(e.target.files[0]);
       }
     });
 
     generateBtn.addEventListener('click', () => {
-      applyPixelatedCartoonEffect();
+      pixelateAndCartoon();
       generateBtn.blur();
     });
 
-    // Keyboard accessibility for upload container
-    const uploadContainer = document.querySelector('.upload-container');
-    uploadContainer.addEventListener('keydown', e => {
+    // Accessibility: keyboard trigger upload dialog on label focus + enter/space
+    const uploadLabel = document.querySelector('label.upload-label');
+    uploadLabel.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         fileInput.click();
       }
     });
 
-    function reset() {
-      originalFigure.hidden = true;
-      aiFigure.hidden = true;
-      generateBtn.disabled = true;
-      generateBtn.setAttribute('aria-disabled', 'true');
-      aiCanvas.width = 0;
-      aiCanvas.height = 0;
-      originalImage.src = '';
-      imgLoaded = false;
-    }
-
     reset();
+
   })();
 </script>
+
 </body>
 </html>
-
