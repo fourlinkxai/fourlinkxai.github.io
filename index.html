@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Smart AI Chat</title>
+<title>Fourlinkx AI Chat</title>
 <style>
   /* Reset and base */
   *, *::before, *::after {
@@ -22,6 +22,7 @@
 
   /* Container fits mobile and desktop */
   #chat-container {
+    position: relative;
     background: #1e1e1e;
     width: 100vw;
     max-width: 350px;
@@ -32,6 +33,28 @@
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     overflow: hidden;
+    /* Background image and overlay handled via pseudo element */
+  }
+
+  /* Background image with overlay */
+  #chat-container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.25;
+    z-index: 0;
+    filter: brightness(0.6);
+    border-radius: 12px;
+  }
+
+  /* Make sure content is above background */
+  #chat-container > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* Header */
@@ -44,6 +67,7 @@
     text-align: center;
     user-select: none;
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    border-radius: 12px 12px 0 0;
   }
 
   /* Chat messages panel */
@@ -51,11 +75,12 @@
     flex: 1;
     overflow-y: auto;
     padding: 14px 12px;
-    background: #2a2a2a;
+    background: rgba(42, 42, 42, 0.85);
     display: flex;
     flex-direction: column;
     gap: 12px;
     scroll-behavior: smooth;
+    border-radius: 0 0 12px 12px;
   }
 
   /* Scrollbar for chat */
@@ -67,7 +92,7 @@
     border-radius: 4px;
   }
   #chat-messages::-webkit-scrollbar-track {
-    background: #1e1e1e;
+    background: transparent;
   }
 
   /* Message bubbles */
@@ -99,8 +124,9 @@
   #input-area {
     display: flex;
     padding: 10px 12px;
-    background: #222;
+    background: rgba(34, 34, 34, 0.95);
     border-top: 1px solid #333;
+    border-radius: 0 0 12px 12px;
   }
   #input-text {
     flex: 1;
@@ -165,6 +191,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     user-select: none;
+    max-width: 150px;
   }
   #reset-button:hover {
     background: #555;
@@ -186,8 +213,8 @@
 </style>
 </head>
 <body>
-<div id="chat-container" role="main" aria-label="Smart AI Chat interface">
-  <header>Smart AI Chat</header>
+<div id="chat-container" role="main" aria-label="Fourlinkx AI Chat interface">
+  <header>Fourlinkx AI Chat</header>
   <section id="chat-messages" aria-live="polite" aria-relevant="additions" tabindex="0"></section>
   <form id="input-area" aria-label="Send a message to AI" autocomplete="off" novalidate>
     <textarea id="input-text" name="message" placeholder="Type your message..." aria-label="Message input" rows="1" required></textarea>
@@ -220,7 +247,6 @@
     inputText.addEventListener('input', () => {
       updateSendButtonState();
       autoGrowTextarea(inputText);
-      // Scroll chat to bottom on typing
       scrollChatToBottom();
     });
 
@@ -231,7 +257,6 @@
       chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
     }
 
-    // Append message with optional callback for typing animation
     function appendMessage(text, sender, options = {}) {
       const messageDiv = document.createElement('div');
       messageDiv.classList.add('message', sender);
@@ -247,7 +272,6 @@
       return messageDiv;
     }
 
-    // Simulate typing effect with adjustable speed
     async function simulateTyping(element, text, speed = 40) {
       for (let i = 0; i < text.length; i++) {
         element.textContent += text.charAt(i);
@@ -256,40 +280,86 @@
       }
     }
 
-    // AI response logic, with delayed response and typing effect
+    function randomChoice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
     async function getAIResponse(userMessage) {
       const msg = userMessage.toLowerCase();
 
-      // Artificial thinking delay range 700-1500ms
       function delay(ms) {
         return new Promise(res => setTimeout(res, ms));
       }
 
-      await delay(800 + Math.random() * 700); // simulate "thinking"
+      await delay(800 + Math.random() * 700);
 
-      if (msg.includes('hello') || msg.includes('hi')) {
-        return "Hello! How can I assist you today?";
+      const greetings = [
+        "Hello! How can I assist you today?",
+        "Hi there! What would you like to talk about?",
+        "Hey! I'm here to help you, ask me anything.",
+        "Greetings! How can I be of service?"
+      ];
+      const howAreYou = [
+        "I'm just code, but I'm doing great, thanks!",
+        "Feeling helpful as always! What can I do for you?",
+        "I'm perfectly operational and ready to chat!",
+        "Can't complain, I'm here to assist you!"
+      ];
+      const nameResponses = [
+        "I'm Fourlinkx AI Chat, your friendly virtual assistant.",
+        "You can call me Fourlinkx AI Chat.",
+        "I'm an AI chat bot designed to help you.",
+        "Fourlinkx AI Chat at your service!"
+      ];
+      const weatherResponses = [
+        "I don't have access to live weather data currently.",
+        "Wish I could check the weather for you, but I can't.",
+        "Sorry, I can't provide weather updates yet.",
+        "Weather's a mystery to me, but I hope it's nice!"
+      ];
+      const helpResponses = [
+        "Of course! Ask me anything you'd like help with.",
+        "I'm here to assist you with any questions.",
+        "Happy to help! What do you want to know?",
+        "Feel free to ask me anything, I'm listening."
+      ];
+      const thankResponses = [
+        "You're welcome! Glad to assist.",
+        "No problem! Always happy to help.",
+        "Anytime! Let me know if you have more questions.",
+        "My pleasure! I'm here whenever you need."
+      ];
+      const fallbackResponses = [
+        "That's interesting! Can you tell me more?",
+        "I see. What else would you like to discuss?",
+        "Good to know! Feel free to ask me anything else.",
+        "Hmm, let me think about that... Tell me more.",
+        "I appreciate you sharing that! Anything else on your mind?",
+        "I'm not sure about that, but I'm learning every day!"
+      ];
+
+      if (msg.match(/\b(hello|hi|hey|greetings|sup|yo)\b/)) {
+        return randomChoice(greetings);
       }
-      if (msg.includes('how are you')) {
-        return "I'm just code, but I'm working perfectly! How about you?";
+      if (msg.match(/\b(how are you|how's it going|how do you do)\b/)) {
+        return randomChoice(howAreYou);
       }
-      if (msg.includes('your name')) {
-        return "I'm Smart AI Chat, your friendly assistant.";
+      if (msg.match(/\b(your name|who (are|r) you|identify yourself)\b/)) {
+        return randomChoice(nameResponses);
       }
-      if (msg.includes('weather')) {
-        return "I can't check real-time weather yet, but I hope it's nice where you are!";
+      if (msg.match(/\b(weather|rain|temperature|forecast)\b/)) {
+        return randomChoice(weatherResponses);
       }
-      if (msg.includes('help')) {
-        return "Sure! Ask me anything, and I'll do my best to help.";
+      if (msg.match(/\b(help|assist|support|can you do|what can you do|help me)\b/)) {
+        return randomChoice(helpResponses);
       }
-      if (msg.includes('thank')) {
-        return "You're welcome! Happy to chat anytime.";
+      if (msg.match(/\b(thank|thanks|thank you|appreciate)\b/)) {
+        return randomChoice(thankResponses);
       }
       if (msg.trim() === '') {
         return "Please type something so I can help.";
       }
-      // Default generic response
-      return "Interesting! Tell me more or ask anything else.";
+      return randomChoice(fallbackResponses);
     }
 
     async function handleSendMessage(e) {
@@ -302,18 +372,15 @@
       updateSendButtonState();
       autoGrowTextarea(inputText);
 
-      // AI typing...
       const aiBubble = appendMessage('', 'ai');
 
       const aiResponse = await getAIResponse(msg);
-      // Clear the typing bubble and simulate typing
       aiBubble.textContent = '';
       await simulateTyping(aiBubble, aiResponse);
     }
 
     inputForm.addEventListener('submit', handleSendMessage);
 
-    // Accessibility: Enter to send, Shift+Enter for newline
     inputText.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -323,19 +390,16 @@
       }
     });
 
-    // Reset chat
     resetButton.addEventListener('click', () => {
       chatMessages.innerHTML = '';
-      appendMessage("Welcome! I'm Smart AI Chat. How can I help you today?", 'ai');
+      appendMessage("Welcome! I'm Fourlinkx AI Chat. How can I help you today?", 'ai');
       inputText.value = '';
       updateSendButtonState();
       autoGrowTextarea(inputText);
       inputText.focus();
     });
 
-    // Initial welcome message
-    appendMessage("Welcome! I'm Smart AI Chat. How can I help you today?", 'ai');
-
+    appendMessage("Welcome! I'm Fourlinkx AI Chat. How can I help you today?", 'ai');
   })();
 </script>
 </body>
