@@ -63,12 +63,28 @@
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             padding: 14px 0;
             color: #fff;
-            font-size: 1.5rem; /* Increased font size for better visibility */
+            font-size: 2rem; /* Increased font size for better visibility */
             font-weight: 700;
             text-align: center;
             user-select: none;
             box-shadow: 0 4px 8px rgba(0,0,0,0.4);
             border-radius: 12px 12px 0 0;
+            transition: font-size 0.3s ease; /* Smooth transition for font size */
+        }
+
+        /* Responsive adjustments for header */
+        @media (max-width: 600px) {
+            header {
+                font-size: 1.5rem; /* Adjusted font size for smaller screens */
+                padding: 10px 0; /* Adjusted padding for smaller screens */
+            }
+        }
+
+        @media (max-width: 400px) {
+            header {
+                font-size: 1.2rem; /* Further adjusted font size for very small screens */
+                padding: 8px 0; /* Further adjusted padding for very small screens */
+            }
         }
 
         /* Chat mode menu */
@@ -101,7 +117,7 @@
         #chat-mode-menu button:focus {
             background: #2575fc;
             color: white;
-            box-shadow: 0 0 10px #2575fcaa;
+            box-shadow: 0 0 10px #2575fc aa;
         }
 
         #chat-messages {
@@ -123,7 +139,7 @@
             background: #555;
             border-radius: 4px;
         }
-        #chat-messages ::-webkit-scrollbar-track {
+        #chat-messages::-webkit-scrollbar-track {
             background: transparent;
         }
 
@@ -234,16 +250,8 @@
                 width: 100vw;
             }
             header {
-                font-size: 1.2rem; /* Adjusted header font size */
-            }
-            #input-text {
-                font-size: 0.95rem;
-            }
-            #chat-mode-menu button {
-                max-width: none;
-                font-size: 0.8rem;
-                margin: 0 2px;
-                padding: 6px 6px;
+                font-size: 1.2rem; /* Further adjusted font size for very small screens */
+                padding: 8px 0; /* Further adjusted padding for very small screens */
             }
         }
     </style>
@@ -371,103 +379,4 @@
                         "Let's discuss your business ideas and questions thoughtfully.",
                         "Here's some advice related to business matters."
                     ],
-                    emotional: [
-                        "I understand, your emotions are important.",
-                        "Let's work through how you feel together."
-                    ],
-                    love: [
-                        "Love is a beautiful thing. How can I assist you?",
-                        "I'm here to listen and help with love and relationships."
-                    ]
-                };
-                const fallback = baseFallbacks[mode] || ["I'm here to help with your questions."];
-                return fallback[Math.floor(Math.random() * fallback.length)];
-            }
-
-            async function getAIResponse(userMessage) {
-                const prompt = modePrompts[currentMode] || '';
-                const questionWithContext = `${prompt} Question: ${userMessage}`;
-                const answer = await queryHuggingFaceQA(questionWithContext);
-                if (answer) return answer;
-                return await getFallbackResponse(userMessage, currentMode);
-            }
-
-            async function handleSendMessage(e) {
-                e.preventDefault();
-                const msg = inputText.value.trim();
-                if (!msg) return;
-
-                appendMessage(msg, 'user');
-                inputText.value = '';
-                updateSendButtonState();
-                autoGrowTextarea(inputText);
-
-                const aiBubble = appendMessage('', 'ai');
-
-                const aiResponse = await getAIResponse(msg);
-                aiBubble.textContent = '';
-                await simulateTyping(aiBubble, aiResponse);
-            }
-
-            inputForm.addEventListener('submit', handleSendMessage);
-
-            inputText.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    if (!sendButton.disabled) {
-                        sendButton.click();
-                    }
-                }
-            });
-
-            function updateSelectedMode() {
-                modeButtons.forEach(btn => {
-                    const selected = btn.dataset.mode === currentMode;
-                    btn.classList.toggle('selected', selected);
-                    btn.setAttribute('aria-pressed', selected.toString());
-                });
-                const placeholders = {
-                    sex: "Ask something about adult topics...",
-                    business: "Ask your business questions...",
-                    emotional: "Share or ask about your feelings...",
-                    love: "Ask about love and relationships..."
-                };
-                inputText.placeholder = placeholders[currentMode] || "Type your message...";
-                inputText.focus();
-            }
-
-            function resetChatForMode() {
-                chatMessages.innerHTML = '';
-                const welcomes = {
-                    sex: "Welcome to Sex Chat mode. Ask me anything about adult topics respectfully.",
-                    business: "Welcome to Business Chat mode. I'm here to assist with business questions.",
-                    emotional: "Welcome to Emotional Chat mode. Feel free to share your feelings.",
-                    love: "Welcome to Love Chat mode. Let's talk about matters of the heart."
-                };
-                appendMessage(welcomes[currentMode] || "Welcome! How can I assist you today?", 'ai');
-                inputText.value = '';
-                updateSendButtonState();
-                autoGrowTextarea(inputText);
-                inputText.focus();
-            }
-
-            modeButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    if (button.dataset.mode === currentMode) return;
-                    currentMode = button.dataset.mode;
-                    updateSelectedMode();
-                    resetChatForMode();
-                });
-            });
-
-            resetButton.addEventListener('click', () => {
-                resetChatForMode();
-            });
-
-            updateSelectedMode();
-            resetChatForMode();
-
-        })();
-    </script>
-</body>
-  </html>
+                    emotional
