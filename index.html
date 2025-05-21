@@ -1,230 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Fourlinkx Real-Time Chat App</title>
-<style>
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f7fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  #app {
-    display: flex;
-    flex-direction: column;
-    width: 350px;
-    height: 600px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-    overflow: hidden;
-  }
-  header {
-    background: #3f51b5;
-    color: white;
-    font-weight: 700;
-    font-size: 1.3rem;
-    padding: 15px 20px;
-    text-align: center;
-    user-select: none;
-  }
-  #chat-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #e8ebf4;
-  }
-  #messages {
-    flex: 1;
-    padding: 15px 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .message {
-    max-width: 75%;
-    padding: 10px 14px;
-    border-radius: 20px;
-    font-size: 0.95rem;
-    line-height: 1.3;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-  }
-  .message.system {
-    color: #888;
-    font-style: italic;
-    text-align: center;
-    max-width: 100%;
-    background: transparent;
-    border-radius: 0;
-    padding: 6px 0;
-  }
-  .message.self {
-    background: #3f51b5;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-  }
-  .message.other {
-    background: white;
-    color: #222;
-    align-self: flex-start;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    border-bottom-left-radius: 4px;
-  }
-  #input-area {
-    display: flex;
-    background: white;
-    border-top: 1px solid #ccc;
-  }
-  #input {
-    flex: 1;
-    border: none;
-    padding: 12px 16px;
-    font-size: 1rem;
-    border-radius: 0;
-    outline: none;
-  }
-  #send-btn {
-    background: #3f51b5;
-    color: white;
-    border: none;
-    padding: 0 20px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 1rem;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-  #send-btn:hover {
-    background: #303f9f;
-  }
-  #status {
-    font-size: 0.9rem;
-    color: #555;
-    font-style: italic;
-    text-align: center;
-    padding: 8px 12px;
-    background: #f0f2f8;
-    border-bottom: 1px solid #ccc;
-  }
-  @media screen and (max-width: 400px) {
-    #app {
-      width: 95vw;
-      height: 95vh;
-      max-width: 350px;
-      max-height: 600px;
-      border-radius: 0;
-      box-shadow: none;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <title>VR Training & Entertainment Hub</title>
+  <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap');
+
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0c1740 0%, #1a3a7c 100%);
+      color: #e0e7ff;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-  }
-</style>
+    /* Main Menu styles */
+    #menu {
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      margin: auto;
+    }
+    #menu h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px #0ff, 0 0 15px #0ff;
+      color: #00d0ff;
+    }
+    #menu h2 {
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin: 0 0 2.5rem 0;
+      color: #a0d8f7;
+      text-shadow: 0 0 5px #00acee;
+    }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(45deg, #00bcd4, #008ba3);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      padding: 14px 42px;
+      font-size: 1.25rem;
+      margin: 1rem 1rem 1rem 0;
+      cursor: pointer;
+      box-shadow: 0 4px 20px #00bcd460;
+      transition: background 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      text-align: center;
+    }
+    .btn:last-child {
+      margin-right: 0;
+    }
+    .btn:hover, .btn:focus {
+      background: linear-gradient(45deg, #00e9ff, #00acc1);
+      outline: none;
+      transform: scale(1.05);
+    }
+
+    /* Scene container, hidden by default */
+    #sceneContainer {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 10;
+      background: black;
+    }
+    #exitBtn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #00e5ff;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #00e5ff;
+      border-radius: 20px;
+      cursor: pointer;
+      user-select: none;
+      z-index: 15;
+      transition: background 0.3s ease;
+    }
+    #exitBtn:hover, #exitBtn:focus {
+      background: #00e5ff;
+      color: black;
+      outline: none;
+    }
+    /* VR heading overlay text */
+    #vrHeader {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      color: #00e5ff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      z-index: 15;
+      text-shadow: 0 0 5px #00e5ff;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      #menu h1 {
+        font-size: 2.1rem;
+      }
+      #menu h2 {
+        font-size: 1.2rem;
+      }
+      .btn {
+        font-size: 1rem;
+        padding: 12px 32px;
+        margin: 0.8rem 0.5rem 0.8rem 0;
+      }
+      #exitBtn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        top: 12px;
+        right: 12px;
+      }
+      #vrHeader {
+        font-size: 1.1rem;
+        top: 12px;
+        left: 12px;
+      }
+    }
+
+  </style>
 </head>
 <body>
-<div id="app" role="main" aria-label="Real-Time Chat Application">
-  <header>Fourlinkx Real-Time Chat App</header>
-  <div id="status" aria-live="polite" aria-atomic="true">Connecting...</div>
-  <div id="chat-container">
-    <div id="messages" aria-live="polite" aria-relevant="additions" role="log"></div>
-    <form id="input-area" aria-label="Send message">
-      <input type="text" id="input" placeholder="Type your message..." autocomplete="off" aria-label="Message input" required />
-      <button type="submit" id="send-btn" aria-label="Send message">Send</button>
-    </form>
+  <div id="menu" role="main" aria-label="Virtual Reality Training and Entertainment Main Menu">
+    <h1>Fourlinkx VR Hub</h1>
+    <h2>Select Experience</h2>
+    <button class="btn" id="btnTraining" aria-label="Go to Training">Training</button>
+    <button class="btn" id="btnEntertainment" aria-label="Go to Entertainment">Entertainment</button>
   </div>
-</div>
 
-<!-- Socket.io client CDN -->
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-Rp+3mNi4mhkHH2gVrZ6QQ9mK9Qi9MT6E07tdib8GZf7eYl82zw+fN3N3ktnfY+Rd" crossorigin="anonymous"></script>
-<script>
-  (function(){
-    // Change this URL to your deployed backend socket.io server URL
-    const SOCKET_IO_SERVER_URL = "https://your-app-name.up.railway.app"; // <-- EDIT THIS!
+  <div id="sceneContainer" role="region" aria-label="Virtual Reality Experience Container">
+    <div id="vrHeader" aria-live="polite" aria-atomic="true">VR Hub</div>
+    <button id="exitBtn" aria-label="Exit VR Experience">Exit VR</button>
+    <a-scene id="aframeScene" embedded vr-mode-ui="enabled:true" renderer="colorManagement: true; foveationLevel: 2">
+      <a-entity id="cameraRig">
+        <a-camera
+          id="camera"
+          position="0 1.6 0"
+          wasd-controls-enabled="true"
+          look-controls-enabled="true"
+          raycaster="objects: .clickable"
+        >
+          <a-cursor
+            id="cursor"
+            color="#00e5ff"
+            fuse="true"
+            fuse-timeout="1000"
+            geometry="primitive:ring; radiusInner: 0.01; radiusOuter: 0.02"
+            material="color: #00e5ff; shader: flat"
+            aria-label="VR cursor"
+          ></a-cursor>
+        </a-camera>
+      </a-entity>
+      <!-- Ambient and directional lights -->
+      <a-light type="ambient" color="#666"></a-light>
+      <a-light
+        type="directional"
+        color="#00e5ff"
+        intensity="0.8"
+        position="1 3 1"
+      ></a-light>
+    </a-scene>
+  </div>
 
-    const statusEl = document.getElementById('status');
-    const messagesEl = document.getElementById('messages');
-    const formEl = document.getElementById('input-area');
-    const inputEl = document.getElementById('input');
+  <script>
+    const menu = document.getElementById('menu');
+    const btnTraining = document.getElementById('btnTraining');
+    const btnEntertainment = document.getElementById('btnEntertainment');
+    const sceneContainer = document.getElementById('sceneContainer');
+    const exitBtn = document.getElementById('exitBtn');
+    const vrHeader = document.getElementById('vrHeader');
+    const scene = document.querySelector('a-scene');
+    const cameraRig = document.getElementById('cameraRig');
 
-    let socket;
-    let connected = false;
+    // Current state tracking
+    let currentExperience = null; // "menu", "training", "entertainment"
+    let trainingSelected = null; // for topic
 
-    // Prompt nickname once
-    let nickname = prompt("Enter your nickname:", "User" + Math.floor(Math.random() * 1000)) || "User";
-
-    // Add system message
-    function addSystemMessage(msg) {
-      const div = document.createElement('div');
-      div.classList.add('message', 'system');
-      div.textContent = msg;
-      messagesEl.appendChild(div);
-      messagesEl.scrollTo({ top: messagesEl.scrollHeight, behavior: 'smooth' });
-    }
-
-    // Add chat message
-    function addChatMessage(msg, isSelf) {
-      const div = document.createElement('div');
-      div.classList.add('message');
-      div.classList.add(isSelf ? 'self' : 'other');
-      div.textContent = msg;
-      messagesEl.appendChild(div);
-      messagesEl.scrollTo({ top: messagesEl.scrollHeight, behavior: 'smooth' });
-    }
-
-    function connect() {
-      statusEl.textContent = 'Connecting...';
-      socket = io(SOCKET_IO_SERVER_URL);
-
-      socket.on('connect', () => {
-        connected = true;
-        statusEl.textContent = 'Connected as "' + nickname + '".';
-        socket.emit('set-nickname', nickname);
-        addSystemMessage('You joined the chat.');
-        inputEl.focus();
-      });
-
-      socket.on('disconnect', () => {
-        connected = false;
-        statusEl.textContent = 'Disconnected.';
-        addSystemMessage('You left the chat.');
-      });
-
-      socket.on('connect_error', (err) => {
-        statusEl.textContent = 'Connection error: ' + err.message;
-      });
-
-      socket.on('chat message', data => {
-        // data format: { sender: string, msg: string }
-        const isSelf = data.sender === nickname;
-        const displayName = isSelf ? "Me" : data.sender;
-        addChatMessage(displayName + ': ' + data.msg, isSelf);
-      });
-    }
-
-    formEl.addEventListener('submit', function(e){
-      e.preventDefault();
-      if (!connected) {
-        alert('Not connected to chat server.');
-        return;
+    // Training topics and their descriptions
+    const trainingTopics = [
+      {
+        id: 'webdev',
+        label: 'Website Development',
+        description: 'Learn HTML, CSS, JavaScript and build interactive web pages.'
+      },
+      {
+        id: 'solar',
+        label: 'Solar Inverter System',
+        description: 'Understand solar inverter working principles and installations.'
+      },
+      {
+        id: 'surveillance',
+        label: 'Surveillance Cameras',
+        description: 'Explore types, setup, and functions of security cameras.'
+      },
+      {
+        id: 'networking',
+        label: 'Computer Networking',
+        description: 'Discover the basics of networks, protocols, and devices.'
       }
-      const msg = inputEl.value.trim();
-      if (!msg) return;
-      socket.emit('chat message', msg);
-      inputEl.value = '';
-      inputEl.focus();
+    ];
+
+    // Clear all clickable training cubes/entities except camera and lights
+    function clearScene() {
+      scene.querySelectorAll('a-entity.clickable').forEach(el => el.remove());
+      scene.querySelectorAll('a-plane.infoPanel').forEach(el => el.remove());
+    }
+
+    // Create the main training topic selection VR scene
+    function createTrainingSelection() {
+      clearScene();
+      vrHeader.textContent = 'Training - Select Topic';
+
+      // Floor large plane
+      const floor = document.createElement('a-plane');
+      floor.setAttribute('rotation', '-90 0 0');
+      floor.setAttribute('width', '12');
+      floor.setAttribute('height', '12');
+      floor.setAttribute('color', '#121c31');
+      floor.classList.add('clickable');
+      scene.appendChild(floor);
+
+      // Position cubes in a semicircle
+      const radius = 4;
+      const angleStep = Math.PI / (trainingTopics.length - 1);
+
+      trainingTopics.forEach((topic, idx) => {
+        const angle = (idx * angleStep) - Math.PI / 2; // from left to right
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+        
+        // Cube representing topic
+        const cube = document.createElement('a-box');
+        cube.setAttribute('position', `${x.toFixed(2)} 1.2 ${z.toFixed(2)}`);
+        cube.setAttribute('color', '#00bcd4');
+        cube.setAttribute('depth', '1');
+        cube.setAttribute('height', '1');
+        cube.setAttribute('width', '1');
+        cube.setAttribute('class', 'clickable');
+        cube.setAttribute('tabindex', '0');
+        cube.setAttribute('aria-label', `Training Topic: ${topic.label}`);
+        cube.setAttribute('id', topic.id);
+        scene.appendChild(cube);
+
+        // Text label above cube
+        const label = document.createElement('a-text');
+        label.setAttribute('value', topic.label);
+        label.setAttribute('align', 'center');
+        label.setAttribute('color', '#00e5ff');
+        label.setAttribute('position', `${x.toFixed(2)} 2.2 ${z.toFixed(2)}`);
+        label.setAttribute('width', '3.5');
+        scene.appendChild(label);
+
+        // Interaction to show info panel about the topic
+        cube.addEventListener('click', () => showTrainingInfo(topic));
+        cube.addEventListener('keyup', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            showTrainingInfo(topic);
+          }
+        });
+      });
+    }
+
+    // Show training topic info in VR (info panel in front of user)
+    function showTrainingInfo(topic) {
+      clearInfoPanel();
+
+      const infoPanel = document.createElement('a-plane');
+      infoPanel.setAttribute('position', '0 1.6 -2');
+      infoPanel.setAttribute('width', '4');
+      infoPanel.setAttribute('height', '2.2');
+      infoPanel.setAttribute('color', '#112233cc');
+      infoPanel.classList.add('infoPanel');
+      infoPanel.setAttribute('tabindex', '0');
+      infoPanel.setAttribute('aria-label', `Information about ${topic.label}`);
+
+      // Title text
+      const title = document.createElement('a-text');
+      title.setAttribute('value', topic.label);
+      title.setAttribute('color', '#00e5ff');
+      title.setAttribute('align', 'center');
+      title.setAttribute('position', '0 0.75 0.01');
+      title.setAttribute('width', '3.8');
+      infoPanel.appendChild(title);
+
+      // Description text (wrapped)
+      const desc = document.createElement('a-text');
+      desc.setAttribute('value', topic.description);
+      desc.setAttribute('color', '#ccf1ff');
+      desc.setAttribute('align', 'center');
+      desc.setAttribute('position', '0 0 0.01');
+      desc.setAttribute('wrap-count', '40');
+      desc.setAttribute('width', '3.8');
+      infoPanel.appendChild(desc);
+
+      // Close button
+      const closeBtn = document.createElement('a-plane');
+      closeBtn.setAttribute('position', '0 -0.8 0.01');
+      closeBtn.setAttribute('width', '1.5');
+      closeBtn.setAttribute('height', '0.45');
+      closeBtn.setAttribute('color', '#00bcd4');
+      closeBtn.classList.add('clickable');
+      closeBtn.setAttribute('tabindex', '0');
+      closeBtn.setAttribute('aria-label', 'Close information panel');
+
+      const closeText = document.createElement('a-text');
+      closeText.setAttribute('value', 'Close');
+      closeText.setAttribute('color', '#001f33');
+      closeText.setAttribute('align', 'center');
+      closeText.setAttribute('position', '0 0 0.01');
+      closeText.setAttribute('width', '1.5');
+      closeBtn.appendChild(closeText);
+
+      closeBtn.addEventListener('click', () => {
+        clearInfoPanel();
+      });
+      closeBtn.addEventListener('keyup', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') clearInfoPanel();
+      });
+
+      infoPanel.appendChild(closeBtn);
+      scene.appendChild(infoPanel);
+
+      // Focus for accessibility
+      infoPanel.focus();
+    }
+
+    function clearInfoPanel() {
+      scene.querySelectorAll('a-plane.infoPanel').forEach(el => el.parentNode.removeChild(el));
+    }
+
+    // Create simple entertainment VR scene placeholder
+    function createEntertainmentScene() {
+      clearScene();
+      vrHeader.textContent = 'Entertainment';
+
+      // Floor
+      const floor = document.createElement('a-plane');
+      floor.setAttribute('rotation', '-90 0 0');
+      floor.setAttribute('width', '12');
+      floor.setAttribute('height', '12');
+      floor.setAttribute('color', '#201a40');
+      floor.classList.add('clickable');
+      scene.appendChild(floor);
+
+      // Chill cube rotating
+      const cube = document.createElement('a-box');
+      cube.setAttribute('position', '0 1.3 -3');
+      cube.setAttribute('color', '#ff4081');
+      cube.setAttribute('depth', '1.5');
+      cube.setAttribute('height', '1.5');
+      cube.setAttribute('width', '1.5');
+      cube.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;');
+      scene.appendChild(cube);
+
+      // Text floating above cube
+      const label = document.createElement('a-text');
+      label.setAttribute('value', 'Entertainment\n(Coming Soon)');
+      label.setAttribute('align', 'center');
+      label.setAttribute('color', '#ff4081');
+      label.setAttribute('position', '0 2.3 -3');
+      label.setAttribute('width', '5');
+      scene.appendChild(label);
+    }
+
+    // Show VR experience container and hide menu
+    function showSceneContainer() {
+      menu.style.display = 'none';
+      sceneContainer.style.display = 'block';
+
+      // Enter VR mode if possible
+      if (scene.enterVR) {
+        scene.enterVR();
+      }
+    }
+
+    // Hide VR scene container and show menu
+    function hideSceneContainer() {
+      // Exit VR if active
+      if (scene.is('vr-mode')) {
+        scene.exitVR();
+      }
+      sceneContainer.style.display = 'none';
+      menu.style.display = 'block';
+      vrHeader.textContent = 'VR Hub';
+
+      clearScene();
+      clearInfoPanel();
+      currentExperience = null;
+      trainingSelected = null;
+    }
+
+    // Button handlers
+    btnTraining.addEventListener('click', () => {
+      currentExperience = "training";
+      createTrainingSelection();
+      showSceneContainer();
+    });
+    btnEntertainment.addEventListener('click', () => {
+      currentExperience = "entertainment";
+      createEntertainmentScene();
+      showSceneContainer();
+    });
+    exitBtn.addEventListener('click', hideSceneContainer);
+    exitBtn.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        hideSceneContainer();
+      }
     });
 
-    connect();
-  })();
-</script>
+    // Accessibility keyboard support for main buttons
+    btnTraining.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        btnTraining.click();
+      }
+    });
+    btnEntertainment.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        btnEntertainment.click();
+      }
+    });
+  </script>
 </body>
 </html>
 
